@@ -28,11 +28,6 @@ visible_cols = ["AcademicYear","Instructor","Course","CourseQuality"]
 def hello_world():
         return 'Hello World!'
 
-# @app.route('/hello/')
-# @app.route('/hello/<name>')
-# def hello(name=None):
-#     return render_template('test.html', name=name)
-
 @app.route('/')
 def main():
     db = mysql.get_db()
