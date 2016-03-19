@@ -1,0 +1,22 @@
+AnswerText,Weight
+A,4
+B,3
+C,2
+NR/D/F,0
+Other/Don't know,NULL
+8 hrs. or fewer,4
+9-12 hrs.,10.5
+13-16 hrs.,14.5
+17-20 hrs,18.5
+21 hrs. or more,22.5
+3 hr/wk or less,1.5
+4 hr/wk,4
+5 hr/wk,5
+6 hr/wk,6
+7 hr/wk or more,7.5
+0 hr/wk,0
+1-5 hr/wk,3
+6-10 hr/wk,8
+11-15 hr/wk,13
+16-20 hr/wk,18
+21 hr/wk or more,21

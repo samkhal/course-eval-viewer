@@ -1,0 +1,7 @@
+# Login credentials for parser (should have full access rights)
+
+[MySQL database]
+hostname: 	myhost
+database:	mydb
+username:	myuser
+password:	mypassword

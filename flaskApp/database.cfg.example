@@ -1,0 +1,7 @@
+# Login credentials for webapp (should only have SELECT rights)
+
+[MySQL database]
+hostname: 	myhost
+database:	mydb
+username:	myuser
+password:	mypassword

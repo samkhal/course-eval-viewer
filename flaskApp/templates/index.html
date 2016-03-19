@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.colVis.min.js"></script>
+
+    <!--link rel="stylesheet" type="text/css" href="static/jquery.dataTables.min.css">
+    <link href="static/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="static/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="static/jquery.dataTables.min.js"></script-->
+    <!--script type="text/javascript">
+        $(document).ready(function() {
+        $('#example').DataTable( {
+            "bProcessing": true,
+            "bServerSide": true,
+            "sPaginationType": "full_numbers",
+            "bjQueryUI": true,
+            "sAjaxSource": "/server_data"
+    } );
+} );
+        </script-->
+    <script type="text/javascript">
+        $(document).ready(function() {
+        var table = $('#question-data').DataTable( {
+            dom: 'Bfrtipl',
+            buttons: [
+                {
+                    extend: 'colvis',
+                    text: "Select aggregation parameters",
+                    columns: {{param_col_idxs|safe}}
+                },
+                {
+                    extend: 'colvis',
+                    text: "Select metrics",
+                    columns: {{avg_col_idxs|safe}}
+                },
+                {
+                    extend: 'colvisRestore',
+                    text: "Reset columns to default",
+                    //columns: {{avg_col_idxs|safe}}
+                }
+            ], 
+
+            "serverSide": true,
+            //"processing": true,
+            
+            "ajax": {
+                "url": "/server_data",
+                "type": "POST",
+                "dataType": "json",
+                "contentType": "application/json;charset=utf-8",
+                "data": function( d ) {
+                    for(i = 0; i < d.columns.length; i++){
+                        d.columns[i].visible = $('#question-data').DataTable().column(i).visible()
+                    }
+                    return JSON.stringify( d );
+
+                }
+            },
+            "columns": {{columns|safe}},
+            "columnDefs": [
+                {   // combine averages and samples into one cell
+                    "render": function(data, type, row, meta){
+                        return parseFloat(data).toFixed(2)+' ('+parseFloat(row[meta.col+1]).toFixed(0)+')'
+                    },  
+                    "targets": {{avg_col_idxs|safe}}
+                }]
+            } );
+
+        //Refresh table when visibility changes
+        table.on('column-visibility.dt', function() {
+            //table.draw()
+        })
+
+        // On draw, update the answer
+        table.on('draw.dt', show_answer)
+
+        var suppress_visibility_redraw = false
+        // Redraw on visibility change
+        table.on('column-visibility', function() {
+            if( !suppress_visibility_redraw){
+                table.draw()
+            }
+        })
+
+        var question_changed = 0
+        function ask_question(){
+            console.log('question')
+            question_changed += 1
+            var param = $('#select-param').val()
+            var sort_dir = $('#select-order').val()
+            var output = $('#select-output').val()
+
+            //Supress redraw on each visibility() call
+            suppress_visibility_redraw = true
+
+            // Hide all cols   
+            table.columns().visible(false)
+
+            // Show one param col and one avg col
+            table.column(param + ":name").visible(true)
+            table.column(output + ":name").visible(true).order(sort_dir).draw()
+            suppress_visibility_redraw = false
+        }
+        ask_question() //Run this on load
+
+        function show_answer(){
+            console.log('answer')
+            if(question_changed){
+                console.log('changed')
+                question_changed -= 1
+                var param = $('#select-param').val()
+                var answer = table.column(param + ":name").data()[0]
+                $('#answer').text(answer)
+            }
+        }
+
+        $('#select-param, #select-order, #select-output')
+            .on('change', ask_question)
+
+        // output_col_order = 'asc'
+        // $('#select-order')
+        //     .on('change', function() {
+        //         q_changed = true
+        //         output_col_order = $(this).val()
+        //         $('#select-output').change()
+        //     })
+
+        // $('#select-output')
+        //     .on('change', function(){
+        //         //hide all avg cols
+        //         table.columns({{avg_col_idxs|safe}}).visible(false)
+                
+        //         q_changed = true
+        //         table.column($(this).val() + ":name")
+        //             .order(output_col_order)
+        //             .visible(true)
+        //             .draw()
+        //     })
+} );
+        </script>
+
+        <!--script type="text/javascript">//!!
+        $(document).ready(function() {
+        var table = $('#schedule-data').DataTable()})
+        </script-->
+
+</head>
+<body>
+    <div class="container">
+
+        <div class="page-header">
+            <h2>Pressing Questions</h2>
+        </div>
+        <p>
+            Which 
+            <select id='select-param'>
+                <option value='Instructor'>professor</option>
+                <option value='Course'>course</option>
+                <option value='Department'>department</option>
+            </select>
+            is ranked
+            <select id='select-order'>
+                <option value='desc'>highest</option>
+                <option value='asc'>lowest</option>
+            </select>
+            by
+            <select id='select-output'>
+                <option value='CourseQuality'>course quality?</option>
+                <option value='ProfQuality'>instructor quality?</option>
+            </select>
+            <span id='answer'>THE ANSWER</span>
+        </p>
+
+        <table id="question-data" class="display" cellspacing="0" width="100%"></table>
+
+        <div class="page-header">
+            <h2>Evaluate Your Schedule</h2> 
+        </div>
+        <p>
+            Copy a block of text from your schedule that contains your CRNs here. Don't worry about unrelated text, we'll pull out the CRNs.<br>
+            <textarea id='schedule-input'></textarea> <button id='process-schedule'>Go</button>
+            <table id="schedule-data" class="display" cellspacing="0" width="100%">
+            </table>
+        </p>
+        <div class="page-header">
+            <h2>Pretty Graphs</h2>
+        </div>
+
+    </div>
+</body>
+</html>
