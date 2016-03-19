@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # Read in MySQL login info from file
 cfg = ConfigParser.ConfigParser()
-cfg.read('database_local.cfg')
+cfg.read('database.cfg')
 opt = cfg._sections['MySQL database']
 
 app.config['MYSQL_DATABASE_HOST'] = opt['hostname']

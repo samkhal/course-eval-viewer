@@ -12,14 +12,14 @@ class Database(object):
             self.con = mdb.connect(**kwargs)
         else:
             cfg = ConfigParser.ConfigParser()
-            cfg.read('database_local.cfg')
+            cfg.read('database.cfg')
             opt = cfg._sections['MySQL database']
 
             self.con = mdb.connect(host = opt['hostname'],
                                    db = opt['database'],
                                    user = opt['username'],
                                    passwd = opt['password'])
-            
+
         self.cur = self.con.cursor(mdb.cursors.DictCursor)
 
     def store(self, obj):
