@@ -38,6 +38,7 @@ def main():
     sample_col_idxs = [idx for idx,name in enumerate(col_names) if name[-2:] == '_N']
     avg_col_idxs = [idx for idx,name in enumerate(col_names) if name+'_N' in col_names]
     param_col_idxs = [idx for idx in range(len(col_names)) if idx not in sample_col_idxs+avg_col_idxs]
+    init_order = [[avg_col_idxs[0], 'desc']]    
     columns = [{"title": name, 
                 "name": name, 
                 # param cols are searchable, value cols aren't
@@ -48,7 +49,8 @@ def main():
     return render_template('index.html',columns = json.dumps(columns),
                                         sample_col_idxs = json.dumps(sample_col_idxs),
                                         avg_col_idxs = json.dumps(avg_col_idxs),
-                                        param_col_idxs = json.dumps(param_col_idxs))
+                                        param_col_idxs = json.dumps(param_col_idxs),
+                                        init_order = json.dumps(init_order))
 
 @app.route("/server_data", methods=['POST'])
 def get_server_data():
