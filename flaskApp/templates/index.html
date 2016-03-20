@@ -4,10 +4,12 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/scroller/1.4.1/css/scroller.dataTables.min.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.colVis.min.js"></script>
+     <script type="text/javascript" src="https://cdn.datatables.net/scroller/1.4.1/js/dataTables.scroller.min.js"></script>
 
     <!--link rel="stylesheet" type="text/css" href="static/jquery.dataTables.min.css">
     <link href="static/bootstrap.min.css" rel="stylesheet">
@@ -28,6 +30,7 @@
         $(document).ready(function() {
         var table = $('#question-data').DataTable( {
             dom: 'Bfrtipl',
+            // dom: 'Bfrti',
             buttons: [
                 {
                     extend: 'colvis',
@@ -46,10 +49,16 @@
                 }
             ], 
 
-            "serverSide": true,
-            //"processing": true,
+            deferRender:    true,
+            scrollY:        500,
+            scroller: {
+                loadingIndicator: true
+            },
+            //paging: true,
+            serverSide: true,
+            //processing: true,
             
-            "ajax": {
+            ajax: {
                 "url": "/server_data",
                 "type": "POST",
                 "dataType": "json",
@@ -62,7 +71,7 @@
 
                 }
             },
-            "columns": {{columns|safe}},
+             "columns": {{columns|safe}},
             "columnDefs": [
                 {   // combine averages and samples into one cell
                     "render": function(data, type, row, meta){
@@ -123,25 +132,7 @@
         $('#select-param, #select-order, #select-output')
             .on('change', ask_question)
 
-        // output_col_order = 'asc'
-        // $('#select-order')
-        //     .on('change', function() {
-        //         q_changed = true
-        //         output_col_order = $(this).val()
-        //         $('#select-output').change()
-        //     })
 
-        // $('#select-output')
-        //     .on('change', function(){
-        //         //hide all avg cols
-        //         table.columns({{avg_col_idxs|safe}}).visible(false)
-                
-        //         q_changed = true
-        //         table.column($(this).val() + ":name")
-        //             .order(output_col_order)
-        //             .visible(true)
-        //             .draw()
-        //     })
 } );
         </script>
 

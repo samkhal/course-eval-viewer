@@ -3,11 +3,6 @@ from flask import request
 from collections import defaultdict, namedtuple
 import re
 
-BOOLEAN_FIELDS = (
-    "search.regex", "searchable", "orderable", "regex"
-)
-
-
 class DataTablesServer(object):
  
     def __init__( self, request, index, table, db):
@@ -19,7 +14,7 @@ class DataTablesServer(object):
         self.req_data = request.get_json(force=True)
         self.columns = self.req_data['columns']
 
-        print(self.columns)
+        print(self.req_data)
         
         self.column_names = [col['name'] for col in self.columns]
 
