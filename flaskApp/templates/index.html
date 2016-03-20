@@ -49,6 +49,7 @@
                 {
                     extend: 'colvisRestore',
                     text: "Reset columns to default",
+                    name: "restoreCols"
                     //columns: {{avg_col_idxs|safe}}
                 }
             ], 
@@ -76,12 +77,16 @@
                 }
             },
              "columns": {{columns|safe}},
+             "order": {{init_order|safe}},
             "columnDefs": [
                 {   // combine averages and samples into one cell
                     "render": function(data, type, row, meta){
                         return parseFloat(data).toFixed(2)+' ('+parseFloat(row[meta.col+1]).toFixed(0)+')'
                     },  
                     "targets": {{avg_col_idxs|safe}}
+                },
+                {
+
                 }]
             } );
 
@@ -120,10 +125,9 @@
             table.column(output + ":name").visible(true).order(sort_dir).draw()
             suppress_visibility_redraw = false
         }
-        ask_question() //Run this on load
+        //ask_question() //Run this on load
 
         function show_answer(){
-            console.log('answer')
             if(question_changed){
                 console.log('changed')
                 question_changed -= 1
@@ -150,7 +154,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <a href="/" class="navbar-brand">WPI Course Evaluation Viewer</a>
+                <a href="/" class="navbar-brand">WPI Course Evaluation Viewer BETA</a>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -186,7 +190,7 @@
                 <option value='CourseQuality'>course quality?</option>
                 <option value='ProfQuality'>instructor quality?</option>
             </select>
-            <span id='answer'>THE ANSWER</span>
+            <span id='answer'>Dodson, Leslie L.</span>
         </p>
 
         <table id="question-data" class="display" cellspacing="0" width="100%"></table>
