@@ -30,6 +30,10 @@
     } );
 } );
         </script-->
+    <script type=text/javascript>
+        //Set root url
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
     <script type="text/javascript">
         $(document).ready(function() {
         var table = $('#question-data').DataTable( {
@@ -64,7 +68,7 @@
             //processing: true,
             
             ajax: {
-                "url": "/server_data",
+                "url": $SCRIPT_ROOT + "/server_data",
                 "type": "POST",
                 "dataType": "json",
                 "contentType": "application/json;charset=utf-8",
