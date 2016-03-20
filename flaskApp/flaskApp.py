@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from DataTables import DataTablesServer
 import json
 import ConfigParser
+from os import path
 
 from flaskext.mysql import MySQL
 from MySQLdb import cursors
@@ -10,7 +11,7 @@ app = Flask(__name__)
 
 # Read in MySQL login info from file
 cfg = ConfigParser.ConfigParser()
-cfg.read('database.cfg')
+cfg.read(path.join(path.dirname(__file__), 'database.cfg'))
 opt = cfg._sections['MySQL database']
 
 app.config['MYSQL_DATABASE_HOST'] = opt['hostname']
