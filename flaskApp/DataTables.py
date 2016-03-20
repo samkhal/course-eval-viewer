@@ -70,8 +70,10 @@ class DataTablesServer(object):
     def run_queries(self):
         dataCursor = self.db.cursor(cursors.DictCursor) # replace the standard cursor with a dictionary cursor only for this query
         query = """
-            SELECT SQL_CALC_FOUND_ROWS {columns}
-            FROM   {table} {where} {group} {order} {limit}""" .format(
+                SELECT SQL_CALC_FOUND_ROWS * FROM (
+                    SELECT {columns}
+                    FROM   {table} {where} {group}
+                ) t {order} {limit}""" .format(
                 columns=self.columns_aggregate(), table=self.table,
                 where=self.filtering(), order=self.ordering(), 
                 group=self.grouping(), limit=self.paging() 
@@ -148,9 +150,12 @@ class DataTablesServer(object):
             for order in self.req_data['order']:
                 # Validate input
                 col_i = int(order['column'])
-                order_dir = order['dir'] if order['dir'] in ['asc','desc'] else None
+                #order_dir = order['dir'] if order['dir'] in ['asc','desc'] else None
+                #orders.append("{} {}".format(self.column_names[col_i], order_dir))
 
-                orders.append("{} {}".format(self.column_names[col_i], order_dir))
+                # In order to sort nulls last, sort "col asc" as "-col desc" instead
+                order_prefix = '-' if order['dir']=='asc' else ''
+                orders.append("{}{} DESC".format(order_prefix, self.column_names[col_i]))                
 
             order_str = "ORDER BY " + ",".join(orders)
            
