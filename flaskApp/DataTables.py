@@ -1,7 +1,19 @@
-from MySQLdb import cursors
+from MySQLdb import cursors, escape_string
 from flask import request
 from collections import defaultdict, namedtuple
 import re
+
+# Sanitize all strings in JSON object to be safe from SQL injection
+def sanitize_json(json):
+    if isinstance(json, basestring):
+        # Escape all strings
+        return escape_string(json)
+    elif isinstance(json, list):
+        return [sanitize_json(item) for item in json]
+    elif isinstance(json, dict):
+        return {escape_string(key):sanitize_json(value) for key,value in json.items()}
+    else: # Int, float, True, False, None don't need to be sanitized
+        return json
 
 class DataTablesServer(object):
  
@@ -11,7 +23,9 @@ class DataTablesServer(object):
         self.index = index
         self.table = table
         # values specified by the datatable for filtering, sorting, paging
-        self.req_data = request.get_json(force=True)
+        self.req_data = sanitize_json(request.get_json(force=True))
+
+
         self.columns = self.req_data['columns']
 
         print(self.req_data)
@@ -31,8 +45,6 @@ class DataTablesServer(object):
         self.cadinality = 0
         
         self.run_queries()
-
-
  
     def output_result(self):
         # return output
