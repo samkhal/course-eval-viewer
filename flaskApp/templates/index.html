@@ -1,19 +1,43 @@
 <!doctype html>
 <html>
 <head>
+
+    <link href="static/bootswatch.min.css" rel="stylesheet" type="text/css">
+    <!--link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"-->
+
+
+<!--
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link href="static/bootswatch.min.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/scroller/1.4.1/css/scroller.dataTables.min.css">
-
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/scroller/1.4.1/css/scroller.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css">
+     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.bootstrap.min.css">
+-->
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+ <!--   <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.colVis.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.2/js/buttons.bootstrap.min.js"></script>
+    
      <script type="text/javascript" src="https://cdn.datatables.net/scroller/1.4.1/js/dataTables.scroller.min.js"></script>
      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+ -->
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11,b-1.1.2,b-colvis-1.1.2,sc-1.4.1/datatables.min.css"/>
+ 
+<script type="text/javascript" src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11,b-1.1.2,b-colvis-1.1.2,sc-1.4.1/datatables.min.js"></script>
+
+
+
+
+
+
+
 
     <!--link rel="stylesheet" type="text/css" href="static/jquery.dataTables.min.css">
     <link href="static/bootstrap.min.css" rel="stylesheet">
@@ -39,10 +63,11 @@
         var table = $('#question-data').DataTable( {
             dom: 'Bfrtipl',
             // dom: 'Bfrti',
+            //renderer: { "header": "jqueryui" },
             buttons: [
                 {
                     extend: 'colvis',
-                    text: "Select aggregation parameters",
+                    text: "Select parameters",
                     columns: {{param_col_idxs|safe}}
                 },
                 {
@@ -60,12 +85,17 @@
 
             deferRender:    true,
             scrollY:        500,
+            scrollX: "100%",
             scroller: {
                 loadingIndicator: true
             },
             //paging: true,
             serverSide: true,
             //processing: true,
+
+            "language": {
+                "search": "Filter:"
+              },
             
             ajax: {
                 "url": $SCRIPT_ROOT + "/server_data",
@@ -153,6 +183,32 @@
         var table = $('#schedule-data').DataTable()})
         </script-->
 
+        <style>
+        div.dataTables_filter {
+            float: right;
+        }
+        body{
+            font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif !important;   
+        }
+        .badge {
+            display: inline-block;
+            min-width: 10px;
+            padding: 3px 7px;
+            font-size: 12px;
+
+            color: #ffffff;
+            line-height: 1;
+            vertical-align: middle;
+            white-space: nowrap;
+            text-align: center;
+            background-color: #337ab7;
+            border-radius: 10px;
+        }
+
+        .indent {
+        padding-left: 50px
+        }</style>
+
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -175,30 +231,36 @@
     <div class="container">
 
         <div class="page-header">
-            <h2>Pressing Questions</h2>
+            <h2>Course eval data, from 2006 to C-term 2016</h2>
         </div>
-        <p>
+        <p> Ask a question:</p>
+        <p class= "indent">
             Which 
-            <select id='select-param'>
+            <select id='select-param' class='badge'>
                 <option value='Instructor'>professor</option>
                 <option value='Course'>course</option>
                 <option value='Department'>department</option>
             </select>
             is ranked
-            <select id='select-order'>
+            <select id='select-order' class='badge'>
                 <option value='desc'>highest</option>
                 <option value='asc'>lowest</option>
             </select>
             by
-            <select id='select-output'>
+            <select id='select-output' class='badge'>
                 <option value='CourseQuality'>course quality?</option>
                 <option value='ProfQuality'>instructor quality?</option>
-            </select>
-            <span id='answer'>Dodson, Leslie L.</span>
+            </select><br>
+            Answer: <span id='answer' class='badge'>Putnam, Justin B.</span>
         </p>
+        <p> Or, explore the full data below. Use the filter to find individual courses or instructors.</p>
 
-        <table id="question-data" class="display" cellspacing="0" width="100%"></table>
+        <table id="question-data" class="display table table-striped table-bordered" cellspacing="0" width="100%"></table>
 
+        <div class="page-header">
+            <h2>Coming soon</h2>
+        </div>
+        <p>Plots of ratings over time, predictions of workload for your schedule, and more. Stay tuned!</p>
         <!--div class="page-header">
             <h2>Evaluate Your Schedule</h2> 
         </div>
