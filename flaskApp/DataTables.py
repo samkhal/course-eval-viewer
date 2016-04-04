@@ -153,10 +153,15 @@ class DataTablesServer(object):
                 #order_dir = order['dir'] if order['dir'] in ['asc','desc'] else None
                 #orders.append("{} {}".format(self.column_names[col_i], order_dir))
 
-                # In order to sort nulls last, sort "col asc" as "-col desc" instead
-                order_prefix = '-' if order['dir']=='asc' else ''
-                orders.append("{}{} DESC".format(order_prefix, self.column_names[col_i]))                
-
+                #if this is a data column
+                if self.column_names[col_i]+'_N' in self.column_names:
+                    # In order to sort nulls last, sort "col asc" as "-col desc" instead
+                    order_prefix = '-' if order['dir']=='asc' else ''
+                    orders.append("{}{} DESC".format(order_prefix, self.column_names[col_i]))  
+                    # Secondary sort by number of responses              
+                    orders.append("{}{} DESC".format(order_prefix, self.column_names[col_i]+"_N"))
+                else: #This is a param column
+                    orders.append("{} {}".format(self.column_names[col_i], order['dir']))
             order_str = "ORDER BY " + ",".join(orders)
            
         return order_str
